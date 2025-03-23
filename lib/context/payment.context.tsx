@@ -18,6 +18,7 @@ interface PaymentContextType {
   paymentMethods: PaymentMethod[];
   isLoading: boolean;
   error: string | null;
+  clearPayment: () => void;
   fetchPaymentMethods: () => Promise<void>;
   createPaymentMethod: (payload: CreatePaymentMethodPayload) => Promise<void>;
   updatePaymentMethod: (
@@ -137,6 +138,10 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const clearPayment = () => {
+    setPaymentMethods([]);
+  }
+
   const contextValue: PaymentContextType = {
     paymentMethods,
     isLoading,
@@ -144,6 +149,7 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     fetchPaymentMethods: handleFetchPaymentMethods,
     createPaymentMethod: handleCreatePaymentMethod,
     updatePaymentMethod: handleUpdatePaymentMethod,
+    clearPayment,
   };
 
   return (

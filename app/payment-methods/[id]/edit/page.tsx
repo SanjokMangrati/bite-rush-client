@@ -91,7 +91,10 @@ export default function EditPaymentMethodPage() {
     if (!paymentMethodId) return;
 
     try {
-      await updatePaymentMethod(paymentMethodId, data);
+      await updatePaymentMethod(paymentMethodId, {
+        ...data,
+        card_number: data.card_number.replace(/\s+/g, ''),
+      });
       toast.success("Payment method updated successfully");
       router.push("/payment-methods");
     } catch (error) {

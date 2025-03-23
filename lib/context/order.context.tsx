@@ -24,6 +24,7 @@ interface OrderContextType {
   currentOrder: Order | null;
   isLoading: boolean;
   itemBeingAdded: string;
+  isOrderBeingCancelled: boolean;
   error: string | null;
   addItem: (payload: AddItemToCartPayload) => Promise<void>;
   fetchOrder: (orderId: string) => Promise<void>;
@@ -46,6 +47,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [itemBeingAdded, setItemBeingAdded] = useState<string>("");
+  const [isOrderBeingCancelled, setIsOrderBeingCancelled] = useState<boolean>(false);
 
   useEffect(() => {
     const storedOrder = localStorage.getItem("currentOrder");
@@ -162,7 +164,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
 
   const handleCancel = useCallback(
     async (orderId: string) => {
-      setIsLoading(true);
+      setIsOrderBeingCancelled(true);
       setError(null);
       try {
         const updatedOrder = await handleApiCall((token) =>
@@ -178,7 +180,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
         setError(errorData);
         toast.error(errorData);
       } finally {
-        setIsLoading(false);
+        setIsOrderBeingCancelled(false);
       }
     },
     [accessToken, refreshAuthToken],
@@ -250,6 +252,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     currentOrder,
     isLoading,
     itemBeingAdded,
+    isOrderBeingCancelled,
     error,
     addItem: handleAddItem,
     fetchOrder: handleFetchOrder,

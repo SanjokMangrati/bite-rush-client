@@ -7,17 +7,25 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/context/auth.context";
 import { useOrder } from "@/lib/context/order.context";
 import Container from "./Container";
+import { usePayment } from "@/lib/context/payment.context";
 
 export default function Header() {
   const pathname = usePathname();
   const { isAuthenticated, logout } = useAuth();
-  const { currentOrder } = useOrder();
+  const { currentOrder, clearOrder } = useOrder();
+  const { clearPayment } = usePayment();
 
   const cartItemCount =
     currentOrder?.orderItems?.reduce(
       (total, item) => total + item.quantity,
       0,
     ) || 0;
+
+  const handleLogout = () => {
+    logout();
+    clearOrder();
+    clearPayment();
+  }
 
   return (
     <Container>
@@ -43,10 +51,19 @@ export default function Header() {
               >
                 Payment Methods
               </Link>
+              {
+                currentOrder && (currentOrder?.status === 'PLACED' || currentOrder?.status === "CANCELLED") &&
+                <Link
+                  href={`/order/${currentOrder.id}`}
+                  className={`text-sm font-medium ${pathname.startsWith("/order") ? "text-primary" : "text-muted-foreground hover:text-primary"}`}
+                >
+                  Last Order
+                </Link>
+              }
               <div className="flex items-center gap-4">
                 <Link href="/cart" className="relative">
                   <ShoppingCart className="h-5 w-5" />
-                  {cartItemCount > 0 && (
+                  {cartItemCount > 0 && currentOrder?.status === "CART" && (
                     <span className="absolute -top-2 -right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-medium text-primary-foreground">
                       {cartItemCount}
                     </span>
@@ -55,7 +72,7 @@ export default function Header() {
                 <Link href="/dashboard">
                   <User className="h-5 w-5" />
                 </Link>
-                <Button variant="ghost" size="icon" onClick={() => logout()}>
+                <Button variant="ghost" size="icon" onClick={handleLogout}>
                   <LogOut className="h-5 w-5" />
                 </Button>
               </div>

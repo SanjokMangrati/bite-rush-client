@@ -12,6 +12,7 @@ import type { AuthState, LoginPayload } from "../types/user.types";
 import { login, logout, refreshToken } from "../api/auth.api";
 import { getCurrentUser } from "../api/users.api";
 import { toast } from "sonner";
+import { useOrder } from "./order.context";
 
 interface AuthContextType extends AuthState {
   login: (payload: LoginPayload) => Promise<void>;
@@ -117,7 +118,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setState((prev) => ({ ...prev, isLoading: true }));
 
     try {
-      await logout();
+      if (!state.accessToken) return;
+      await logout(state.accessToken);
     } catch (error) {
       console.error("Logout failed:", error);
       toast.error("Logout failed!");
@@ -133,6 +135,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      localStorage.removeItem("currentOrder")
 
       router.push("/login");
     }

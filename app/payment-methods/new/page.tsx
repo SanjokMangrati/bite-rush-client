@@ -33,7 +33,10 @@ export default function NewPaymentMethodPage() {
 
   const handleSubmit = async (data: PaymentMethodFormValues) => {
     try {
-      await createPaymentMethod(data);
+      await createPaymentMethod({
+        ...data,
+        card_number: data.card_number.replace(/\s+/g, ''),
+      });
       toast.success("Payment method added");
       router.push("/payment-methods");
     } catch (error) {

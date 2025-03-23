@@ -111,7 +111,8 @@ export default function CartPage() {
   if (
     !currentOrder ||
     !currentOrder?.orderItems ||
-    currentOrder?.orderItems.length === 0
+    currentOrder?.orderItems.length === 0 ||
+    !(currentOrder?.status === 'CART')
   ) {
     return (
       <Container>

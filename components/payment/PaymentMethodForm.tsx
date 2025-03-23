@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -36,6 +36,7 @@ export default function PaymentMethodForm({
     formState: { errors },
     watch,
     setValue,
+    control
   } = useForm<PaymentMethodFormValues>({
     resolver: zodResolver(paymentMethodSchema),
     defaultValues: {
@@ -169,8 +170,23 @@ export default function PaymentMethodForm({
         </div>
 
         <div className="flex items-center space-x-2">
-          <Checkbox id="is_default" {...register("is_default")} />
-          <Label htmlFor="is_default">Set as default payment method</Label>
+          <Controller
+            control={control}
+            name="is_default"
+            render={({ field: { onChange, onBlur, value, ref } }) => (
+              <>
+                <Checkbox
+                  id="is_default"
+                  onCheckedChange={(checked: boolean) => {
+                    onChange(checked);
+                  }}
+                  checked={value}
+                  ref={ref}
+                />
+                <Label htmlFor="is_default">Set as default payment method</Label>
+              </>
+            )}
+          />
         </div>
       </div>
 
