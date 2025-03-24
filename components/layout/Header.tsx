@@ -21,8 +21,8 @@ export default function Header() {
       0,
     ) || 0;
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     clearOrder();
     clearPayment();
   }

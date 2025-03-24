@@ -52,7 +52,7 @@ export default function DashboardPage() {
               <CardTitle>Profile</CardTitle>
               <CardDescription>Your account information</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="overflow-x-scroll">
               <div className="space-y-2">
                 <div>
                   <span className="font-medium text-muted-foreground">

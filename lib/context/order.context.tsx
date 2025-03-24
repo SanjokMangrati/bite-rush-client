@@ -25,6 +25,7 @@ interface OrderContextType {
   isLoading: boolean;
   itemBeingAdded: string;
   isOrderBeingCancelled: boolean;
+  loggingOut: boolean;
   error: string | null;
   addItem: (payload: AddItemToCartPayload) => Promise<void>;
   fetchOrder: (orderId: string) => Promise<void>;
@@ -48,6 +49,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [itemBeingAdded, setItemBeingAdded] = useState<string>("");
   const [isOrderBeingCancelled, setIsOrderBeingCancelled] = useState<boolean>(false);
+  const [loggingOut, setLoggingOut] = useState<boolean>(false);
 
   useEffect(() => {
     const storedOrder = localStorage.getItem("currentOrder");
@@ -244,6 +246,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
   );
 
   const clearOrder = useCallback(() => {
+    setLoggingOut(true);
     setCurrentOrder(null);
     localStorage.removeItem("currentOrder");
   }, []);
@@ -253,6 +256,7 @@ export function OrderProvider({ children }: { children: ReactNode }) {
     isLoading,
     itemBeingAdded,
     isOrderBeingCancelled,
+    loggingOut,
     error,
     addItem: handleAddItem,
     fetchOrder: handleFetchOrder,

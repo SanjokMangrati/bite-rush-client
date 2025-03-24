@@ -20,7 +20,7 @@ import { useAuth } from "@/lib/context/auth.context";
 
 export default function OrderPage() {
     const { id: orderId } = useParams();
-    const { currentOrder, fetchOrder, isLoading, error } = useOrder();
+    const { currentOrder, fetchOrder, isLoading, error, loggingOut } = useOrder();
     const { isAuthenticated, isLoading: isAuthenticating } = useAuth();
     const router = useRouter();
 
@@ -32,10 +32,12 @@ export default function OrderPage() {
     }, [isAuthenticated, router]);
 
     useEffect(() => {
-        if (orderId) {
-            fetchOrder(orderId as string).catch(() => toast.error("Failed to fetch order details"));
-        }
-    }, [orderId, fetchOrder]);
+        console.log('outside')
+        if (!orderId || loggingOut || !isAuthenticated) return;
+
+        console.log('inside')
+        fetchOrder(orderId as string).catch(() => toast.error("Failed to fetch order details"));
+    }, [orderId, fetchOrder, isAuthenticated, loggingOut]);
 
     const getStatusBadgeVariant = (status: string) => {
         switch (status) {
