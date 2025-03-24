@@ -14,8 +14,6 @@ Welcome to **BiteRush**, a fast and convenient food delivery platform designed f
 - [Pre-Created Test Accounts](#pre-created-test-accounts)
 - [User Creation](#user-creation)
 - [Installation & Setup](#installation--setup)
-- [Contributing](#contributing)
-- [License](#license)
 
 ---
 
